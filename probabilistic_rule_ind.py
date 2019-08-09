@@ -79,8 +79,6 @@ def extract_ind(input1, input2, input3, rule):
             if ind[i][2] > 0.5:
                 count2 += 1
     print ind.shape
-    print 'mun110: %i' % count1
-    print 'mun101: %i' % count2
     return ind
 
 def frequence(i_m, j_m, k_m, rule):
@@ -88,9 +86,9 @@ def frequence(i_m, j_m, k_m, rule):
     list_t = list[:int(rule[1]), 0]
     list_b = list[:int(rule[1]), 1]
     freq = list[:int(rule[1]), 2]
-    list_t_e = list[int(rule[2]):, 0]
-    list_b_e = list[int(rule[2]):, 1]
-    freq_e = list[int(rule[2]):, 2]
+    list_t_e = list[-int(rule[2]):, 0]
+    list_b_e = list[-int(rule[2]):, 1]
+    freq_e = list[-int(rule[2]):, 2]
     ind = []
     mask = [1]
     # find frequence of ij

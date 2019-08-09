@@ -114,7 +114,6 @@ class MLP(object):
                  n_out,
                  n2_in,
                  n2_out,
-                 y,
                  W1=None,
                  b1=None,
                  W2=None,
@@ -319,10 +318,10 @@ class LogicNN(object):
         n_p_m12 = p_m12 / (p_m12 + p_m13)
         n_p_m13 = p_m13 / (p_m12 + p_m13)
         p_m = T.concatenate([n_p_m12, n_p_m13], axis=1)
-        L_sup = -T.mean(T.log(self.network.p_sup)*self.network.y + T.log(1-self.network.p_sup)*(1-self.network.y))
+        L_sup = -T.mean(T.log(self.network.p_sup))
         L_p_q = -(T.mean(T.sum(T.log(p_m)*self.q_m, axis=1)))
         L_sqr = self.network.sqr
-        cost = L_sup  + self.mu_param*L_sqr
+        cost = L_sup + self.pi * L_p_q + self.mu_param * L_sqr
         return cost, L_sup, L_p_q, L_sqr, p_m12, p_m13, self.network.p_sup
 
     def dropout_cost(self):
@@ -331,10 +330,10 @@ class LogicNN(object):
         dropout_n_p_m12 = dropout_p_m12 / (dropout_p_m12 + dropout_p_m13)
         dropout_n_p_m13 = dropout_p_m13 / (dropout_p_m12 + dropout_p_m13)
         dropout_p_m = T.concatenate([dropout_n_p_m12, dropout_n_p_m13], axis=1)
-        L_sup = -T.mean(T.log(self.network.dropout_p_sup)*self.network.y + T.log(1-self.network.dropout_p_sup)*(1-self.network.y))
+        L_sup = -T.mean(T.log(self.network.dropout_p_sup))
         L_p_q = -(T.mean(T.sum(T.log(dropout_p_m)*self.dropout_q_m, axis=1)))
         L_sqr = self.network.sqr
-        dropout_cost = L_sup + self.mu_param*L_sqr
+        dropout_cost = L_sup + self.pi * L_p_q + self.mu_param * L_sqr
         return dropout_cost
 
     def sup(self):

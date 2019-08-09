@@ -33,11 +33,9 @@ def train(
     revs, W, W2, word_idx_map, vocab = x[0], x[1], x[2], x[3], x[4]
     print "data loaded!"
     if non_static == True:
-        print "model architecture: CNN-non-static"
         print "using: random vectors"
         U = W2
     elif non_static == False:
-        print "model architecture: CNN-static"
         print "using: word2vec vectors, dim=%d" % W.shape[1]
         U = W
 
@@ -49,9 +47,9 @@ def train(
 
     print 'get rule ind'
     train_rules_ind, valid_rules_ind, test_rules_ind = extract(rules)
-    train_rules_ind = train_rules_ind[0]
-    valid_rules_ind = valid_rules_ind[0]
-    test_rules_ind = test_rules_ind[0]
+    # train_rules_ind = train_rules_ind[0]
+    # valid_rules_ind = valid_rules_ind[0]
+    # test_rules_ind = test_rules_ind[0]
     print 'rule ind loaded'
 
 
@@ -104,7 +102,7 @@ def train(
         new_train_rules_ind = np.zeros(
             (len(train_rules_ind), len(train_rules_ind[0]) + extra_data_num, len(train_rules_ind[0][0])))
         for i in range(len(train_rules_ind)):
-            # train_rules_ind[i] = train_rules_ind[i][permutation_order]
+            train_rules_ind[i] = train_rules_ind[i][permutation_order]
             extra_rules_ind_i = train_rules_ind[i][:extra_data_num]
             train_rules_ind_i = np.append(train_rules_ind[i], extra_rules_ind_i, axis=0)
             new_train_rules_ind[i] = train_rules_ind_i
@@ -139,7 +137,6 @@ def train(
         new_valid_rules_ind = np.zeros(
             (len(valid_rules_ind), len(valid_rules_ind[0]) + extra_data_num, len(valid_rules_ind[0][0])))
         for i in range(len(valid_rules_ind)):
-            # valid_rules_ind[i] = valid_rules_ind[i][permutation_order]
             extra_rules_ind_i = valid_rules_ind[i][:extra_data_num]
             valid_rules_ind_i = np.append(valid_rules_ind[i], extra_rules_ind_i, axis=0)
             new_valid_rules_ind[i] = valid_rules_ind_i
@@ -175,7 +172,6 @@ def train(
         new_test_rules_ind = np.zeros(
             (len(test_rules_ind), len(test_rules_ind[0]) + extra_data_num, len(test_rules_ind[0][0])))
         for i in range(len(test_rules_ind)):
-            # test_rules_ind[i] = test_rules_ind[i][permutation_order]
             extra_rules_ind_i = test_rules_ind[i][:extra_data_num]
             test_rules_ind_i = np.append(test_rules_ind[i], extra_rules_ind_i, axis=0)
             new_test_rules_ind[i] = test_rules_ind_i
@@ -484,10 +480,8 @@ def train(
                     test_q_perf = count_q / (test_q_sup.shape[0] * test_q_sup.shape[1])
                     test_p_perf = count_p / (test_p_sup.shape[0] * test_p_sup.shape[1])
 
-                    print
-                    'valid perf: q %.4f %%, p %.4f %%' % (val_q_perf * 100., val_p_perf * 100.)
-                    print
-                    'test perf: q %.4f %%, p %.4f %%' % (test_q_perf * 100., test_p_perf * 100.)
+                    print('valid perf: q %.4f %%, p %.4f %%' % (val_q_perf * 100., val_p_perf * 100.))
+                    print('test perf: q %.4f %%, p %.4f %%' % (test_q_perf * 100., test_p_perf * 100.))
                     fi.write('%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\n' % (
                         cost, L_sup, L_p_q, L_sqr, train_q_perf * 100., train_p_perf * 100., val_q_perf * 100.,
                         val_p_perf * 100., test_q_perf * 100., test_p_perf * 100.))
